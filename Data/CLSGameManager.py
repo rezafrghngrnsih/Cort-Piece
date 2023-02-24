@@ -29,8 +29,6 @@ class GameManager:
 
         os.system('cls')
         print(f'Gamers with their order are :\n\n{self.GamersNameAndOrder}')
-        
-        return self.GamersNameAndOrder
 
     def GamerCaller(self):
         pass
@@ -52,6 +50,50 @@ class GameManager:
                     INSCards.DeckKeysList = list(INSCards.DeckOfCards.keys())
                     break
             INSCards.PlayGroundCards = {}
+
+    def SetGamersOrderDeterminator(self):
+
+        match self.SetGamersOrder[0].Index:
+            case 1:
+                for item in GamersInstances:
+                    if item.Index == 2:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 3:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 4:
+                        self.SetGamersOrder.append(item)
+            case 2:
+                for item in GamersInstances:
+                    if item.Index == 3:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 4:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 1:
+                        self.SetGamersOrder.append(item)
+            case 3:
+                for item in GamersInstances:
+                    if item.Index == 4:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 1:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 2:
+                        self.SetGamersOrder.append(item)
+            case 4:
+                for item in GamersInstances:
+                    if item.Index == 1:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 2:
+                        self.SetGamersOrder.append(item)
+                for item in GamersInstances:
+                    if item.Index == 3:
+                        self.SetGamersOrder.append(item)
 
     def PartnerDeterminator(self):
         pass
