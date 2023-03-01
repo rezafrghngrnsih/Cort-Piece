@@ -51,6 +51,8 @@ class GameManager:
                     break
             INSCards.PlayGroundCards = {}
 
+        return self.TrumpCallerName
+
     def SetGamersOrderDeterminator(self):
 
         match self.SetGamersOrder[0].Index:

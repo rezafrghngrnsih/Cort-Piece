@@ -46,7 +46,5 @@ class Cards:
         self.DeckKeysList.remove(RandedCard)
         return {RandedCard: self.DeckOfCards[RandedCard]}
 
-        return {RandedCard, self.DeckOfCards[RandedCard]}
-
     def Length(self):
         return len(self.DeckKeysList)
