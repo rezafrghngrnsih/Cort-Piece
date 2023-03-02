@@ -23,6 +23,7 @@ for item in GamersInstances:
         GamersInstances.index(item)]
 
 TrumpCallerName = INSGameManager.TrumpCallerDeterminator()
+INSScores.TrumpCallerName = TrumpCallerName
 
 for item in GamersInstances:
     if item.Name == TrumpCallerName:
@@ -53,6 +54,7 @@ print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}')
 for item in GamersInstances:
     if item.TrumpCaller == True:
         INSGameManager.Trump = item.TrumpDeterminator()
+    item.Trump = INSGameManager.Trump
 
 print(f'Trump is : {INSGameManager.Trump}')
 
@@ -66,3 +68,7 @@ print(f'{INSGamer01.Name} hand : {INSGamer01.Hand}')
 print(f'{INSGamer02.Name} hand : {INSGamer02.Hand}')
 print(f'{INSGamer03.Name} hand : {INSGamer03.Hand}')
 print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}')
+
+for item in GamersInstances:
+    if item.TrumpCaller == True:
+        print(item.CardSender())

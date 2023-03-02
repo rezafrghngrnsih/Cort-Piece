@@ -16,9 +16,10 @@ GamersInstances = [Gamer01, Gamer02, Gamer03, Gamer04]
 class GameManager:
     def __init__(self):
         self.GamersNameAndOrder = {}
+        self.SetGamersOrder = {}
         self.PlayGroundCards = {}
         self.TrumpCallerName = ''
-        self.Trump = {}
+        self.Trump = ''
         self.TurnNumber = 0
         self.SetNumber = 0
 
@@ -54,7 +55,6 @@ class GameManager:
         return self.TrumpCallerName
 
     def SetGamersOrderDeterminator(self):
-
         match self.SetGamersOrder[0].Index:
             case 1:
                 for item in GamersInstances:

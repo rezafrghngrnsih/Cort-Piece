@@ -12,7 +12,8 @@ class Gamer:
     def __init__(self):
         self.Name = None
         self.Index = None
-        self.Partnet = ''
+        self.Partner = ''
+        self.Trump = ''
         self.Hand = {}
         self.TrumpCaller = False
         self.RoundNumber = []
@@ -28,7 +29,34 @@ class Gamer:
         print(INSCards.Length())
 
     def CardSender(self):
-        pass
+
+        HandTrumpCards = {}
+        LowHand = {}
+
+        for k, v in self.Hand.items():
+            if (self.Trump not in k) and v != 14:
+                LowHand[k] = v
+
+        for k, v in self.Hand.items():
+            if k[0:-2] == self.Trump:
+                HandTrumpCards.update({k: v})
+        print(f'\n{HandTrumpCards}')
+
+        if (len(HandTrumpCards) >= 5) and (self.Trump+'14' in HandTrumpCards) and (self.Trump+'13' in HandTrumpCards):
+            BigTrump = max(HandTrumpCards, key=HandTrumpCards.get)
+            return {BigTrump: HandTrumpCards[BigTrump]}
+
+        elif len(HandTrumpCards) >= 4:
+            SmallTrump = min(HandTrumpCards, key=HandTrumpCards.get)
+            return {SmallTrump: HandTrumpCards[SmallTrump]}
+
+        elif len(HandTrumpCards) < 4:
+            for k, v in self.Hand.items():
+                if (self.Trump not in k) and v == 14:
+                    return {k: v}
+        else:
+            SmallSuit = min(LowHand, key=LowHand.get)
+            return {SmallSuit: LowHand[SmallSuit]}
 
     def TrumpDeterminator(self):
         HandCardsName = []
