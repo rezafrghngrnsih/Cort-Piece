@@ -20,7 +20,7 @@ class GameManager:
         self.PlayGroundCards = {}
         self.TrumpCallerName = ''
         self.Trump = ''
-        self.TurnNumber = 0
+        self.RoundNumber = 0
         self.SetNumber = 0
 
     def GamersNameAndOrderReciever(self):
@@ -55,47 +55,7 @@ class GameManager:
         return self.TrumpCallerName
 
     def SetGamersOrderDeterminator(self):
-        match self.SetGamersOrder[0].Index:
-            case 1:
-                for item in GamersInstances:
-                    if item.Index == 2:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 3:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 4:
-                        self.SetGamersOrder.append(item)
-            case 2:
-                for item in GamersInstances:
-                    if item.Index == 3:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 4:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 1:
-                        self.SetGamersOrder.append(item)
-            case 3:
-                for item in GamersInstances:
-                    if item.Index == 4:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 1:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 2:
-                        self.SetGamersOrder.append(item)
-            case 4:
-                for item in GamersInstances:
-                    if item.Index == 1:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 2:
-                        self.SetGamersOrder.append(item)
-                for item in GamersInstances:
-                    if item.Index == 3:
-                        self.SetGamersOrder.append(item)
+        pass
 
     def PartnerDeterminator(self):
         pass
@@ -106,5 +66,32 @@ class GameManager:
     def SetCounter(self):
         pass
 
-    def TurnWinnerDeterminator(self):
-        pass
+    def RoundWinnerDeterminator(self):
+
+        PlayGroundKeys = list(self.PlayGroundCards.keys())
+        if PlayGroundKeys[0][0:-2] == self.Trump:
+            PlayGroundTrumps = {}
+            for k, v in self.PlayGroundCards.items():
+                if k[0:-2] == self.Trump:
+                    PlayGroundTrumps.update({k: v})
+            BigTrump = max(PlayGroundTrumps, key=PlayGroundTrumps.get)
+            RoundWinnerIndex = PlayGroundKeys.index(BigTrump)
+            return RoundWinnerIndex
+
+        elif PlayGroundKeys[0][0:-2] != self.Trump:
+            PlayGroundTrumps = {}
+            PlayGroundSuits = {}
+            if self.Trump in PlayGroundKeys:
+                for k, v in self.PlayGroundCards:
+                    if k[0:-2] == self.Trump:
+                        PlayGroundTrumps.update({k, v})
+                BigTrump = max(PlayGroundTrumps, key=PlayGroundTrumps.get)
+                RoundWinnerIndex = PlayGroundKeys.index(BigTrump)
+                return RoundWinnerIndex
+            else:
+                for k, v in self.PlayGroundCards.items():
+                    if k[0:-2] == PlayGroundKeys[0]:
+                        PlayGroundSuits.update({k, v})
+                BigSuit = max(PlayGroundSuits, key=PlayGroundSuits.get)
+                RoundWinnerIndex = PlayGroundKeys.index(BigSuit)
+                return RoundWinnerIndex
