@@ -81,17 +81,20 @@ class GameManager:
         elif PlayGroundKeys[0][0:-2] != self.Trump:
             PlayGroundTrumps = {}
             PlayGroundSuits = {}
-            if self.Trump in PlayGroundKeys:
-                for k, v in self.PlayGroundCards:
-                    if k[0:-2] == self.Trump:
-                        PlayGroundTrumps.update({k, v})
+            for item in PlayGroundKeys:
+                if self.Trump in item:
+                    PlayGroundTrumps.update({item: self.PlayGroundCards[item]})
+            if len(PlayGroundTrumps) > 0:
                 BigTrump = max(PlayGroundTrumps, key=PlayGroundTrumps.get)
                 RoundWinnerIndex = PlayGroundKeys.index(BigTrump)
                 return RoundWinnerIndex
             else:
-                for k, v in self.PlayGroundCards.items():
-                    if k[0:-2] == PlayGroundKeys[0]:
-                        PlayGroundSuits.update({k, v})
+                inst_card = PlayGroundKeys[0]
+                suit1 = inst_card[0:-2]
+                for item in self.PlayGroundCards:
+                    if suit1 in item:
+                        PlayGroundSuits.update(
+                            {item: self.PlayGroundCards[item]})
                 BigSuit = max(PlayGroundSuits, key=PlayGroundSuits.get)
                 RoundWinnerIndex = PlayGroundKeys.index(BigSuit)
                 return RoundWinnerIndex

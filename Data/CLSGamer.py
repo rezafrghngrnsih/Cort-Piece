@@ -33,12 +33,11 @@ class Gamer:
     def CardSender(self):
         __temp_list = {}
         __temp_list_Trumps = {}
-        self.Hand = dict(sorted(self.Hand.items(), key=lambda x: x[1]))
+        HandTrumpCards = {}
+        LowHand = {}
 
         match len(self.PlayGroundCards):
             case 0:
-                HandTrumpCards = {}
-                LowHand = {}
 
                 for k, v in self.Hand.items():
                     if (self.Trump not in k) and v != 14:
@@ -59,15 +58,15 @@ class Gamer:
                     self.Hand.pop(SmallTrump)
                     return {SmallTrump: HandTrumpCards[SmallTrump]}
 
-                elif len(HandTrumpCards) < 4:
+                else:
                     for k, v in self.Hand.items():
                         if (self.Trump not in k) and v == 14:
                             self.Hand.pop(k)
                             return {k: v}
-                else:
-                    SmallSuit = min(LowHand, key=LowHand.get)
-                    self.Hand.pop(SmallSuit)
-                    return {SmallSuit: LowHand[SmallSuit]}
+                        else:
+                            SmallSuit = min(LowHand, key=LowHand.get)
+                            self.Hand.pop(SmallSuit)
+                            return {SmallSuit: LowHand[SmallSuit]}
             case 1:
                 for inst_card in self.PlayGroundCards:
                     suit = inst_card[0:-2]
@@ -113,6 +112,8 @@ class Gamer:
                             __suit_other2 = 0
                             __suit_other2_value = 0
                             __temp_list_other2 = {}
+                            __weight_other1 = 0
+                            __weight_other2 = 0
                             __suits_in_Hand = [x for x in [
                                 'Spade', 'Club', 'Diamond', 'Heart'] if x not in [suit, self.Trump]]
                             for card in self.Hand:
@@ -881,6 +882,20 @@ class Gamer:
                                         card_to_send = {card: self.Hand[card]}
                                         self.Hand.pop(card)
                                         return card_to_send
+                                    else:
+                                        for card in __temp_list:
+                                            if __temp_list[card] > max(self.PlayGroundCards[inst_cards[0]], self.PlayGroundCards[inst_cards[2]]):
+                                                card_to_send = {
+                                                    card: self.Hand[card]}
+                                                self.Hand.pop(card)
+                                                return card_to_send
+                                            else:
+                                                card = min(
+                                                    __temp_list, key=__temp_list.get)
+                                                card_to_send = {
+                                                    card: self.Hand[card]}
+                                                self.Hand.pop(card)
+                                                return card_to_send
                                 else:
                                     if self.PlayGroundCards[inst_cards[1]] > self.PlayGroundCards[inst_cards[0]]:
                                         card = min(

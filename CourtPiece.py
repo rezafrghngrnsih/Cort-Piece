@@ -6,7 +6,7 @@ from Data import CLSScores
 INSGameManager = CLSGameManager.GameManager()
 INSCards = CLSCards.Cards()
 INSScores = CLSScores.Scores()
-SetGamersOrder = []
+RoundGamersOrder = []
 INSGamer01 = CLSGamer.Gamer()
 INSGamer02 = CLSGamer.Gamer()
 INSGamer03 = CLSGamer.Gamer()
@@ -14,48 +14,51 @@ INSGamer04 = CLSGamer.Gamer()
 GamersInstances = [INSGamer01, INSGamer02, INSGamer03, INSGamer04]
 
 
-def SetGamersOrderDeterminatopr(FirstPlayer):
+def SetGamersOrderDeterminator(FirstPlayer):
+    for item in GamersInstances:
+        if item.Index == FirstPlayer:
+            RoundGamersOrder.append(item)
     match FirstPlayer:
         case 1:
             for item in GamersInstances:
                 if item.Index == 2:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 3:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 4:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
         case 2:
             for item in GamersInstances:
                 if item.Index == 3:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 4:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 1:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
         case 3:
             for item in GamersInstances:
                 if item.Index == 4:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 1:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 2:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
         case 4:
             for item in GamersInstances:
                 if item.Index == 1:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 2:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
             for item in GamersInstances:
                 if item.Index == 3:
-                    SetGamersOrder.append(item)
+                    RoundGamersOrder.append(item)
 
 
 INSGameManager.GamersNameAndOrderReciever()
@@ -93,11 +96,10 @@ print(f'{INSGamer04.Name}    {INSGamer04.Index}')
 TrumpCallerIndex = 0
 for item in GamersInstances:
     if item.TrumpCaller == True:
-        SetGamersOrder.append(item)
         print(f'Trump Caller index is : {item.Index}')
         TrumpCallerIndex = item.Index
 
-SetGamersOrderDeterminatopr(TrumpCallerIndex)
+SetGamersOrderDeterminator(TrumpCallerIndex)
 
 
 INSCards.SetDistributer()
@@ -110,11 +112,13 @@ print(f'{INSGamer02.Name} hand : {INSGamer02.Hand}')
 print(f'{INSGamer03.Name} hand : {INSGamer03.Hand}')
 print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}')
 
-
+Trump = ''
 for item in GamersInstances:
     if item.TrumpCaller == True:
-        INSGameManager.Trump = item.TrumpDeterminator()
-    item.Trump = INSGameManager.Trump
+        Trump = item.TrumpDeterminator()
+for item in GamersInstances:
+    item.Trump = Trump
+INSGameManager.Trump = Trump
 
 print(f'Trump is : {INSGameManager.Trump}')
 
@@ -124,39 +128,64 @@ for i in range(2):
     INSGamer03.SecondCardReciever()
     INSGamer04.SecondCardReciever()
 
-print(f'{INSGamer01.Name} hand : {INSGamer01.Hand}')
-print(f'{INSGamer02.Name} hand : {INSGamer02.Hand}')
-print(f'{INSGamer03.Name} hand : {INSGamer03.Hand}')
-print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}')
+print(f'{INSGamer01.Name} hand : {INSGamer01.Hand}\n\n')
+print(f'{INSGamer02.Name} hand : {INSGamer02.Hand}\n\n')
+print(f'{INSGamer03.Name} hand : {INSGamer03.Hand}\n\n')
+print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}\n\n')
 
 
-for i in range(13):
-    for item in SetGamersOrder:
-        PlayedCard = item.CardSender()
-        print(f'Played Card is : {PlayedCard}')
-        for ins in GamersInstances:
-            ins.PlayGroundCards.update(PlayedCard)
-        INSGameManager.PlayGroundCards.update(PlayedCard)
-        INSCards.PlayGroundCards.update(PlayedCard)
-        print(f'Play Ground Cards : {INSCards.PlayGroundCards}')
+for item in GamersInstances:
+    item.Hand = dict(sorted(item.Hand.items(), key=lambda x: x[0]))
 
-    SetGamersOrder = []
 
-    RoundWinnerIndex = INSGameManager.RoundWinnerDeterminator()
-    RoundWinner = SetGamersOrder[RoundWinnerIndex]
-    print(f'Round Winner is : {RoundWinner.Name}')
+for j in range(13):
+    print(f'\nSet number is : {j}\n')
+    for i in range(13):
+        print(f'\nRound number is : {i}\n')
+        print(RoundGamersOrder)
+        for item in RoundGamersOrder:
+            PlayedCard = item.CardSender()
+            print(f'\n{item.Name} played : {PlayedCard}\n')
+            for ins in GamersInstances:
+                ins.PlayGroundCards.update(PlayedCard)
+            INSGameManager.PlayGroundCards.update(PlayedCard)
+            INSCards.PlayGroundCards.update(PlayedCard)
+            print(f'Play Ground Cards : {INSCards.PlayGroundCards}')
 
-    SetGamersOrderDeterminatopr(RoundWinner.Index)
-    print(f'Set Gamers Order : {SetGamersOrder}')
+        RoundWinnerIndex = INSGameManager.RoundWinnerDeterminator()
+        RoundWinner = RoundGamersOrder[RoundWinnerIndex]
+        print(f'\nRound Winner is : {RoundWinner.Name}\n')
 
-    match RoundWinner.Team:
-        case 'A':
-            INSScores.TeamARoundWins += 1
-            INSScores.TeamAScores.append(1)
-            INSScores.TeamBScores.append(0)
-        case 'B':
-            INSScores.TeamBRoundWins += 1
-            INSScores.TeamAScores.append(0)
-            INSScores.TeamBScores.append(1)
-    if (INSScores.TeamARoundWins == 7) or (INSScores.TeamBRoundWins == 7):
-        break
+        for item in GamersInstances:
+            item.PlayGroundCards = {}
+
+        INSCards.PlayGroundCards = INSGameManager.PlayGroundCards = {}
+        RoundGamersOrder = []
+
+        SetGamersOrderDeterminator(RoundWinner.Index)
+        print('Round gamers order :')
+        for item in RoundGamersOrder:
+            print(f'{item.Name}')
+
+        match RoundWinner.Team:
+            case 'A':
+                INSScores.TeamARoundWins += 1
+                INSScores.TeamAScores.append(1)
+                INSScores.TeamBScores.append(0)
+                print(f'\nTeam A round scores : {INSScores.TeamAScores}\n')
+            case 'B':
+                INSScores.TeamBRoundWins += 1
+                INSScores.TeamAScores.append(0)
+                INSScores.TeamBScores.append(1)
+                print(f'\nTeam B round scores : {INSScores.TeamBScores}\n')
+
+        if (INSScores.TeamARoundWins == 7) or (INSScores.TeamBRoundWins == 7):
+            break
+
+    INSScores.SetWinnerDeterminator()
+    print(f'\nTeam A set wins : {INSScores.TeamASetWins}')
+    print(f'\nTeam B set wins : {INSScores.TeamBSetWins}')
+
+INSScores.GameWinnerDeterminator()
+
+print(f'\nGame Winner Team is : {INSScores.GameWinner}')
