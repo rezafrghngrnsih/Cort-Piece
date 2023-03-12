@@ -6,7 +6,8 @@ class Scores:
         self.TeamBRoundWins = 0
         self.TeamASetWins = 0
         self.TeamBSetWins = 0
-        self.GameWinner = {}
+        self.SetWinner = ''
+        self.GameWinner = ''
         self.TrumpCallerName = ''
         self.TeamA = []
         self.TeamB = []
@@ -16,38 +17,44 @@ class Scores:
         _TeamBRoundScore = 0
         TeamAScoresSum = sum(self.TeamAScores)
         TeamBScoresSum = sum(self.TeamBScores)
+        TeamAIsTrumpCaller = False
+        TeamBIsTrumpCaller = False
+        for item in self.TeamA:
+            if item.TrumpCaller == True:
+                TeamAIsTrumpCaller == True
+        for item in self.TeamB:
+            if item.TrumpCaller == True:
+                TeamBIsTrumpCaller == True
 
         if TeamAScoresSum > TeamBScoresSum:
+            self.SetWinner = 'A'
             c = 0
             for i, score in enumerate(self.TeamAScores):
                 _TeamARoundScore += score
-                if i == 6 and _TeamARoundScore == 7 and self.TrumpCallerName in self.TeamA:
+                if i == 6 and _TeamARoundScore == 7 and TeamAIsTrumpCaller == True:
                     self.TeamASetWins += 2
                     c += 1
-                    return self.TeamASetWins
-                elif i == 6 and _TeamARoundScore == 7 and self.TrumpCallerName not in self.TeamA:
+                elif i == 6 and _TeamARoundScore == 7 and TeamAIsTrumpCaller == False:
                     self.TeamASetWins += 3
                     c += 1
-                    return self.TeamASetWins
 
                 elif c == 0:
                     self.TeamASetWins += 1
-                    return self.TeamASetWins
+
         else:
+            self.SetWinner = 'B'
             d = 0
             for i, score in enumerate(self.TeamBScores):
                 _TeamBRoundScore += score
-                if i == 6 and _TeamBRoundScore == 7 and self.TrumpCallerName in self.TeamB:
+                if i == 6 and _TeamBRoundScore == 7 and TeamBIsTrumpCaller == True:
                     self.TeamBSetWins += 2
                     d += 1
-                    return self.TeamBSetWins
-                elif i == 6 and _TeamBRoundScore == 7 and self.TrumpCallerName not in self.TeamB:
+                elif i == 6 and _TeamBRoundScore == 7 and TeamBIsTrumpCaller == False:
                     self.TeamBSetWins += 3
                     d += 1
-                    return self.TeamBSetWins
                 elif d == 0:
                     self.TeamBSetWins += 1
-                    return self.TeamBSetWins
+        return self.SetWinner
 
     def GameWinnerDeterminator(self):
         if self.TeamASetWins >= 7:

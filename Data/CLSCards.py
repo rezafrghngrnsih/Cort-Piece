@@ -1,4 +1,4 @@
-from Data import CLSGameManager
+#from Data import CLSGameManager
 #from Data import CLSGamer
 #from Data import CLSScores
 import random

@@ -14,11 +14,11 @@ INSGamer04 = CLSGamer.Gamer()
 GamersInstances = [INSGamer01, INSGamer02, INSGamer03, INSGamer04]
 
 
-def SetGamersOrderDeterminator(FirstPlayer):
+def RoundGamersOrderDeterminator(FirstGamerIndex):
     for item in GamersInstances:
-        if item.Index == FirstPlayer:
+        if item.Index == FirstGamerIndex:
             RoundGamersOrder.append(item)
-    match FirstPlayer:
+    match FirstGamerIndex:
         case 1:
             for item in GamersInstances:
                 if item.Index == 2:
@@ -75,10 +75,10 @@ INSScores.TeamA = TeamA
 INSScores.TeamB = TeamB
 INSGamer01.Team = INSGamer03.Team = 'A'
 INSGamer02.Team = INSGamer04.Team = 'B'
-INSGamer01.Partner = INSGamer03.Name
-INSGamer02.Partner = INSGamer04.Name
-INSGamer03.Partner = INSGamer01.Name
-INSGamer04.Partner = INSGamer02.Name
+INSGamer01.Partner = INSGamer03
+INSGamer02.Partner = INSGamer04
+INSGamer03.Partner = INSGamer01
+INSGamer04.Partner = INSGamer02
 
 
 TrumpCallerName = INSGameManager.TrumpCallerDeterminator()
@@ -99,7 +99,7 @@ for item in GamersInstances:
         print(f'Trump Caller index is : {item.Index}')
         TrumpCallerIndex = item.Index
 
-SetGamersOrderDeterminator(TrumpCallerIndex)
+RoundGamersOrderDeterminator(TrumpCallerIndex)
 
 
 INSCards.SetDistributer()
@@ -107,10 +107,13 @@ INSCards.SetDistributer()
 for item in GamersInstances:
     item.FirstCardReciever()
 
-print(f'{INSGamer01.Name} hand : {INSGamer01.Hand}')
-print(f'{INSGamer02.Name} hand : {INSGamer02.Hand}')
-print(f'{INSGamer03.Name} hand : {INSGamer03.Hand}')
-print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}')
+for item in GamersInstances:
+    item.Hand = dict(sorted(item.Hand.items(), key=lambda x: x[0]))
+
+print(
+    f'\n\n{GamersInstances[0].Name}            {GamersInstances[1].Name}            {GamersInstances[2].Name}            {GamersInstances[3].Name}')
+for k in range(5):
+    print(f'{list(GamersInstances[0].Hand.keys())[k]}    {list(GamersInstances[1].Hand.keys())[k]}    {list(GamersInstances[2].Hand.keys())[k]}    {list(GamersInstances[3].Hand.keys())[k]}')
 
 Trump = ''
 for item in GamersInstances:
@@ -120,29 +123,42 @@ for item in GamersInstances:
     item.Trump = Trump
 INSGameManager.Trump = Trump
 
-print(f'Trump is : {INSGameManager.Trump}')
+print(f'\n\nTrump is : {INSGameManager.Trump}')
 
-for i in range(2):
+for k in range(2):
     INSGamer01.SecondCardReciever()
     INSGamer02.SecondCardReciever()
     INSGamer03.SecondCardReciever()
     INSGamer04.SecondCardReciever()
 
-print(f'{INSGamer01.Name} hand : {INSGamer01.Hand}\n\n')
-print(f'{INSGamer02.Name} hand : {INSGamer02.Hand}\n\n')
-print(f'{INSGamer03.Name} hand : {INSGamer03.Hand}\n\n')
-print(f'{INSGamer04.Name} hand : {INSGamer04.Hand}\n\n')
+
+print(
+    f'\n\n{GamersInstances[0].Name}            {GamersInstances[1].Name}            {GamersInstances[2].Name}            {GamersInstances[3].Name}')
+for k in range(13):
+    print(f'{list(GamersInstances[0].Hand.keys())[k]}    {list(GamersInstances[1].Hand.keys())[k]}    {list(GamersInstances[2].Hand.keys())[k]}    {list(GamersInstances[3].Hand.keys())[k]}')
 
 
 for item in GamersInstances:
     item.Hand = dict(sorted(item.Hand.items(), key=lambda x: x[0]))
 
 
+print('\n\nRound gamers order :')
+for item in RoundGamersOrder:
+    print(f'{item.Name}')
+
+
 for j in range(13):
-    print(f'\nSet number is : {j}\n')
+    print('.................................................\n.................................................')
+    print(f'\nSet number is : {j+1}\n')
     for i in range(13):
-        print(f'\nRound number is : {i}\n')
-        print(RoundGamersOrder)
+        print(f'\nSet number is : {j+1}\n')
+        print(f'\nRound number is : {i+1}\n')
+        print(
+            f'\n\n{GamersInstances[0].Name}            {GamersInstances[1].Name}            {GamersInstances[2].Name}            {GamersInstances[3].Name}')
+        for k in range(len(GamersInstances[0].Hand)):
+            print(
+                f'{list(GamersInstances[0].Hand.keys())[k]}    {list(GamersInstances[1].Hand.keys())[k]}    {list(GamersInstances[2].Hand.keys())[k]}    {list(GamersInstances[3].Hand.keys())[k]}')
+
         for item in RoundGamersOrder:
             PlayedCard = item.CardSender()
             print(f'\n{item.Name} played : {PlayedCard}\n')
@@ -152,6 +168,8 @@ for j in range(13):
             INSCards.PlayGroundCards.update(PlayedCard)
             print(f'Play Ground Cards : {INSCards.PlayGroundCards}')
 
+        print(
+            f'\nTrump is : {INSGameManager.Trump}\nGround Suit is : {list(INSGameManager.PlayGroundCards.keys())[0]} : {list(INSGameManager.PlayGroundCards.values())[0]}\n')
         RoundWinnerIndex = INSGameManager.RoundWinnerDeterminator()
         RoundWinner = RoundGamersOrder[RoundWinnerIndex]
         print(f'\nRound Winner is : {RoundWinner.Name}\n')
@@ -162,7 +180,7 @@ for j in range(13):
         INSCards.PlayGroundCards = INSGameManager.PlayGroundCards = {}
         RoundGamersOrder = []
 
-        SetGamersOrderDeterminator(RoundWinner.Index)
+        RoundGamersOrderDeterminator(RoundWinner.Index)
         print('Round gamers order :')
         for item in RoundGamersOrder:
             print(f'{item.Name}')
@@ -173,18 +191,202 @@ for j in range(13):
                 INSScores.TeamAScores.append(1)
                 INSScores.TeamBScores.append(0)
                 print(f'\nTeam A round scores : {INSScores.TeamAScores}\n')
+                print(f'\nTeam B round scores : {INSScores.TeamBScores}\n')
+
             case 'B':
                 INSScores.TeamBRoundWins += 1
                 INSScores.TeamAScores.append(0)
                 INSScores.TeamBScores.append(1)
                 print(f'\nTeam B round scores : {INSScores.TeamBScores}\n')
+                print(f'\nTeam A round scores : {INSScores.TeamAScores}\n')
 
+        print('.................................................')
         if (INSScores.TeamARoundWins == 7) or (INSScores.TeamBRoundWins == 7):
             break
-
-    INSScores.SetWinnerDeterminator()
+    SetWinner = INSScores.SetWinnerDeterminator()
+    print(f'Set {j+1} winner is : Team {INSScores.SetWinner}')
     print(f'\nTeam A set wins : {INSScores.TeamASetWins}')
     print(f'\nTeam B set wins : {INSScores.TeamBSetWins}')
+    print('.................................................\n.................................................')
+
+    RoundGamersOrder = []
+
+    match SetWinner:
+        case 'A':
+            x = 0
+            for item in TeamA:
+                if item.TrumpCaller == True:
+                    x += 1
+            if x > 0:
+                for item in TeamA:
+                    if item.TrumpCaller == False:
+                        RoundGamersOrderDeterminator(item.Index)
+            else:
+                for item in GamersInstances:
+                    if item.TrumpCaller == True:
+                        match item.Index:
+                            case 1:
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+
+                            case 2:
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                            case 3:
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                            case 4:
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+        case 'B':
+            y = 0
+            for item in TeamB:
+                if item.TrumpCaller == True:
+                    y += 1
+            if y > 0:
+                for item in TeamB:
+                    if item.TrumpCaller == False:
+                        RoundGamersOrderDeterminator(item.Index)
+            else:
+                for item in GamersInstances:
+                    if item.TrumpCaller == True:
+                        match item.Index:
+                            case 1:
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+
+                            case 2:
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                            case 3:
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                            case 4:
+                                for item in GamersInstances:
+                                    if item.Index == 1:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 2:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 3:
+                                        RoundGamersOrder.append(item)
+                                for item in GamersInstances:
+                                    if item.Index == 4:
+                                        RoundGamersOrder.append(item)
+
+    for item in GamersInstances:
+        item.Hand = {}
+    RoundGamersOrder[0].TrumpCaller = True
+
+    INSCards.SetDistributer()
+
+    for item in GamersInstances:
+        item.FirstCardReciever()
+
+    for item in GamersInstances:
+        item.Hand = dict(sorted(item.Hand.items(), key=lambda x: x[0]))
+    print(
+        f'\n\n{GamersInstances[0].Name}            {GamersInstances[1].Name}            {GamersInstances[2].Name}            {GamersInstances[3].Name}')
+    for k in range(5):
+        print(f'{list(GamersInstances[0].Hand.keys())[k]}    {list(GamersInstances[1].Hand.keys())[k]}    {list(GamersInstances[2].Hand.keys())[k]}    {list(GamersInstances[3].Hand.keys())[k]}')
+
+    TrumpSuit = ''
+    for item in GamersInstances:
+        if item.TrumpCaller == True:
+            TrumpSuit = item.TrumpDeterminator()
+    for item in GamersInstances:
+        item.Trump = TrumpSuit
+    INSGameManager.Trump = TrumpSuit
+
+    print(f'\n\nTrump is : {INSGameManager.Trump}')
+
+    for k in range(2):
+        INSGamer01.SecondCardReciever()
+        INSGamer02.SecondCardReciever()
+        INSGamer03.SecondCardReciever()
+        INSGamer04.SecondCardReciever()
+
+    print(
+        f'\n\n{GamersInstances[0].Name}            {GamersInstances[1].Name}            {GamersInstances[2].Name}            {GamersInstances[3].Name}')
+    for k in range(13):
+        print(f'{list(GamersInstances[0].Hand.keys())[k]}    {list(GamersInstances[1].Hand.keys())[k]}    {list(GamersInstances[2].Hand.keys())[k]}    {list(GamersInstances[3].Hand.keys())[k]}')
+    for item in GamersInstances:
+        item.Hand = dict(sorted(item.Hand.items(), key=lambda x: x[0]))
+
+    print('\n\nRound gamers order :')
+    for item in RoundGamersOrder:
+        print(f'{item.Name}')
 
 INSScores.GameWinnerDeterminator()
 
